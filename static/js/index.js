@@ -5,7 +5,7 @@ const screenCheckbox = document.getElementById('screen-recording')
 const keyLogCheckbox = document.getElementById('key-logging')
 const audioCheckbox = document.getElementById('audio-settings')
 
-// App global variables
+// App global variables on 10/03/2022
 let usernameValue = null;
 let testNameValue = null;
 let testDescriptionValue = null;
