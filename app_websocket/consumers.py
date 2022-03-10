@@ -19,7 +19,8 @@ class VideoConsumer(AsyncConsumer):
                          "text": 0})"""
 
         # rtmp part
-        rtmpUrl = 'rtmp://a.rtmp.youtube.com/live2/ep16-03gf-5t9d-f29s-767h'
+        #rtmpUrl = 'rtmp://a.rtmp.youtube.com/live2/ep16-03gf-5t9d-f29s-767h'
+        rtmpUrl = 'rtmp://a.rtmp.youtube.com/live2/e02h-1u2s-swga-usxs-94hw'
         fps = 15
         command = ['ffmpeg',
         # Facebook requires an audio track, so we create a silent one here.
