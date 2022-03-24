@@ -65,11 +65,16 @@ class FileView(APIView):
             headers = {'content-type': 'application/json'}
             response = requests.post(url = url,headers=headers)
             responses = json.loads(response.text)
-            #print("responses: ",responses)
+            print("responses: ",responses)
+            response_data = responses["data"]
+            print("responses response_data: ",response_data)
+            print("responses username: ",response_data["username"])
+            print("responses password: ",response_data["password"]) 
 
             # Start the upload process
             mega=Mega()
-            m = mega.login(responses["username"],responses["password"])
+            #m = mega.login(responses["username"],responses["password"])
+            m = mega.login(response_data["username"],response_data["password"])
             # Get the destination folder
             folder = m.find('test_recording_application_V1')
             file = m.upload(file_to_upload, folder[0])
@@ -98,7 +103,7 @@ class FileView(APIView):
             # Process keylog file
             try:
                 self.keylog_file_name=request.data['key_log_file'].name
-                #print("Keylog File Name: ",self.keylog_file_name)
+                print("Keylog File Name: ",self.keylog_file_name)
 
                 # save keylog file
                 keylog_filedata=request.data['key_log_file']
