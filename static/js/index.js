@@ -43,6 +43,7 @@ let newBroadcastID = null;
 let btnViewRecords = document.getElementById('view_records');
 let newRtmpUrl = null;
 let websocketReconnect = false;
+let recordinginProgress = true;
 let videoPrivacyStatus = "private";
 // Show selenium IDE installation modal, if not disabled
 let dontShowSeleniumIDEModalAgain = localStorage.getItem("dontShowSelIDEInstallAgain");
@@ -385,6 +386,18 @@ async function stopRecording() {
     }
   }*/
 
+  // Set videos youtube links
+  if ((recordScreen == true) && (recordWebcam == true)) {
+    let youtubeLink = "https://youtu.be/" + newBroadcastID;
+    testRecordingData.set('merged_webcam_screen_file', youtubeLink);
+  }else if (recordScreen == true) {
+    let youtubeLink = "https://youtu.be/" + newBroadcastID;
+    testRecordingData.set('screen_file', youtubeLink);
+  }else if (recordWebcam == true) {
+    let youtubeLink = "https://youtu.be/" + newBroadcastID;
+    testRecordingData.set('webcam_file', youtubeLink);
+  }
+
   // Append test details data
   testRecordingData.set('user_name', usernameValue);
   testRecordingData.set('test_description', testDescriptionValue);
@@ -531,6 +544,9 @@ async function startRecording() {
       // Enable view records button
       btnViewRecords.disabled = false;
 
+      // Indicate that recording is in progress
+      recordinginProgress = true;
+
       msg = "STATUS: Recording Started."
       document.getElementById("app-status").innerHTML = msg;
     }
@@ -555,6 +571,8 @@ async function startRecording() {
         streamWebcamToYT = true;
         // Enable view records button
         btnViewRecords.disabled = false;
+        // Indicate that recording is in progress
+        recordinginProgress = true;
       });
     }
     catch (err) {
@@ -577,6 +595,8 @@ async function startRecording() {
         screenRecorder.start(200);
         // Enable view records button
         btnViewRecords.disabled = false;
+        // Indicate that recording is in progress
+        recordinginProgress = true;
       });
     }
     catch (err) {
@@ -750,7 +770,7 @@ async function sendAvailableData(prevProgress) {
         document.getElementById("app-status").innerHTML = msg;
 
         // Set current video file links on mega drive
-        set_video_links(response.data)
+        //set_video_links(response.data)
 
         // Clear previous test data
         usernameValue = null;
@@ -1113,7 +1133,7 @@ async function createWebsocket() {
 
   appWebsocket.onclose = function (evt) {
     console.log("Websocket Closed: ", evt)
-    if(evt.code == 1006){
+    if(evt.code != 1000){
       // We need to reconnect
       websocketReconnect = true;
     }
@@ -1342,8 +1362,10 @@ async function createBroadcast() {
 }
 
 async function endBroadcast() {
-  authenticate().then(loadClient).then(executeTransitionBroadcast);
-  console.log("Broadcast Trasitioned to complete state!");
+  //authenticate().then(loadClient).then(executeTransitionBroadcast);
+  //console.log("Broadcast Trasitioned to complete state!");
+  executeTransitionBroadcast().then(console.log("Broadcast Trasitioned to complete state!"),
+  console.error("Broadcast Trasitioning to complete state failed!"));
 }
 
 async function stopStreamin() {
