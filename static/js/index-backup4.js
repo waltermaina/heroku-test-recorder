@@ -1358,7 +1358,7 @@ gapi.load("client:auth2", function () {
   });
 }*/
 
-/*async function createBroadcast() {
+async function createBroadcast() {
   //authenticate().then(loadClient).then(execute);
   authenticate().then(loadClient, () => {
     console.error("Error when Authenticating")
@@ -1367,97 +1367,13 @@ gapi.load("client:auth2", function () {
     resetStateOnError();
     showErrorModal();
   });
-}*/
-
-async function createBroadcast() {
-  url = "youtube/createbroadcast/api/"
-  let broadcast_data = new Object();
-  broadcast_data.videoPrivacyStatus=videoPrivacyStatus;
-  broadcast_data.testNameValue=testNameValue;
-  json_broadcast_data = JSON.stringify(broadcast_data);
-  //headers: {"Content-type":"application/json;charset=UTF-8"}
-  const myHeaders = new Headers();
-  myHeaders.append('Accept', 'application/json');
-  myHeaders.append('Content-type', 'application/json');
-
-  fetch(url, { method: 'post', body: json_broadcast_data, headers: myHeaders})
-  //axios.request({url, method: 'post', body: json_broadcast_data, headers: myHeaders})
-  /*.then((res) => {
-    console.log(res);
-  })*/
-  .then((response) => {
-    if (response.status != 201) {
-      throw new Error("Error when creating broadcast!");
-    }else{
-      return response.json();
-    } 
-  }) 
-  .then((json) => {
-    data = json;
-    console.log("data: ", data);
-    newStreamId=data.newStreamId;
-    newStreamName=data.newStreamName;
-    newStreamIngestionAddress=data.newStreamIngestionAddress;
-    newRtmpUrl=data.newRtmpUrl;
-    newBroadcastID=data.new_broadcast_id;
-    console.log("newStreamId:",newStreamId);
-    console.log("newStreamName:",newStreamName);
-    console.log("newStreamIngestionAddress",newStreamIngestionAddress);
-    console.log("newRtmpUrl:",newRtmpUrl);
-    console.log("new_broadcast_id:",newBroadcastID);
-  })
-  .then(createWebsocket()).then(startRecording, () => {
-    console.error("Error when running createWebsocket");
-    throw new Error("Error when running createWebsocket");
-  }).then(console.log("Started recording"), () => {
-    console.error("Error when running startRecording");
-    throw new Error("Error when running startRecording");
-  })
-  .catch((err) => {
-    console.error("I was able to catch an error: ", err)
-    resetStateOnError();
-    showErrorModal();
-  });
 }
 
-/*async function endBroadcast() {
+async function endBroadcast() {
   //authenticate().then(loadClient).then(executeTransitionBroadcast);
   //console.log("Broadcast Trasitioned to complete state!");
   executeTransitionBroadcast().then(console.log("Broadcast Trasitioned to complete state!"),
     console.error("Broadcast Trasitioning to complete state failed!"));
-}*/
-
-
-async function endBroadcast() {
-  url = "youtube/transitionbroadcast/api/";
-  let broadcast_data = new Object();
-  broadcast_data.the_broadcast_id=newBroadcastID;
-  json_broadcast_data = JSON.stringify(broadcast_data);
-  //headers: {"Content-type":"application/json;charset=UTF-8"}
-  const myHeaders = new Headers();
-  myHeaders.append('Accept', 'application/json');
-  myHeaders.append('Content-type', 'application/json');
-
-  fetch(url, { method: 'post', body: json_broadcast_data, headers: myHeaders})
-  //axios.request({url, method: 'post', body: json_broadcast_data, headers: myHeaders})
-  /*.then((res) => {
-    console.log(res);
-  })*/
-  .then((response) => {
-    if (response.status != 200) {
-      throw new Error("Error when transitioning broadcast!");
-    }else{
-      return response.json();
-    }   
-  }) 
-  .then((json) => {
-    data = json;
-    console.log("data: ", data);
-  })
-  .then(console.log("Broadcast Trasitioned to complete state!"))
-  .catch((err) => {
-    console.error("Broadcast Trasitioning to complete state failed!");
-  });
 }
 
 async function stopStreamin() {
