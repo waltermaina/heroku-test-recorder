@@ -63,7 +63,7 @@ def test_api_request(request):
         **request.session.get('credentials'))
 
     youtube = googleapiclient.discovery.build(
-        API_SERVICE_NAME, API_VERSION, credentials=credentials)
+        API_SERVICE_NAME, API_VERSION, credentials=credentials,cache_discovery=False)
 
     channel = youtube.channels().list(mine=True, part='snippet').execute()
 
@@ -78,7 +78,7 @@ def test_api_request(request):
         json.dump(credentials_dict, write_file, indent=4)
 
     #return flask.jsonify(**channel)
-    #json_channel = json.dumps(channel, indent = 4) 
+    #json_channel = json.dumps(channel, indent = 4)
     json_channel = json.dumps(channel)
     print(json_channel)
     return HttpResponse(json_channel)
@@ -113,7 +113,8 @@ def insert_broadcast(youtube):
                 "title": videoTitle
             },
             "contentDetails": {
-                "enableAutoStart": True
+                "enableAutoStart": True,
+                "enableAutoStop": True
             }
         }
     )
@@ -231,7 +232,7 @@ def create_broadcast(request):
     credentials = google.oauth2.credentials.Credentials(**credentials)
 
     youtube = googleapiclient.discovery.build(
-        API_SERVICE_NAME, API_VERSION, credentials=credentials)
+        API_SERVICE_NAME, API_VERSION, credentials=credentials,cache_discovery=False)
 
     # create broadcast time
     time_delt1 = timedelta(days=0, hours=0, minutes=5)
@@ -285,8 +286,8 @@ def create_broadcast(request):
                           }"""
     #return flask.jsonify(**stream_dict)
 
-    # Serializing json  
-    json_stream_dict = json.dumps(stream_dict) 
+    # Serializing json
+    json_stream_dict = json.dumps(stream_dict)
     print(json_stream_dict)
 
     #return json_stream_dict
@@ -458,7 +459,8 @@ def insert_broadcast(youtube,videoPrivacyStatus,testNameValue):
                 "title": videoTitle
             },
             "contentDetails": {
-                "enableAutoStart": True
+                "enableAutoStart": True,
+                "enableAutoStop": True
             }
         }
     )
@@ -533,7 +535,7 @@ def create_broadcast(videoPrivacyStatus,testNameValue):
     credentials = google.oauth2.credentials.Credentials(**credentials)
 
     youtube = googleapiclient.discovery.build(
-        API_SERVICE_NAME, API_VERSION, credentials=credentials)
+        API_SERVICE_NAME, API_VERSION, credentials=credentials,cache_discovery=False)
 
     # Create broadcast
     new_broadcast_id = insert_broadcast(youtube,videoPrivacyStatus,testNameValue)
@@ -546,8 +548,8 @@ def create_broadcast(videoPrivacyStatus,testNameValue):
     stream_id = stream_dict['newStreamId']
     bind_broadcast(youtube, new_broadcast_id, stream_id)
 
-    # Serializing json  
-    json_stream_dict = json.dumps(stream_dict) 
+    # Serializing json
+    json_stream_dict = json.dumps(stream_dict)
     print(json_stream_dict)
 
     #return json_stream_dict
@@ -586,7 +588,7 @@ def transition_broadcast(the_broadcast_id):
     credentials = google.oauth2.credentials.Credentials(**credentials)
 
     youtube = googleapiclient.discovery.build(
-        API_SERVICE_NAME, API_VERSION, credentials=credentials)
+        API_SERVICE_NAME, API_VERSION, credentials=credentials,cache_discovery=False)
 
     request = youtube.liveBroadcasts().transition(
         broadcastStatus="complete",
